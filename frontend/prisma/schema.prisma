@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model category {
+  id        BigInt  @id @default(autoincrement())
+  title     String  @db.VarChar(75)
+  metatitle String? @db.VarChar(100)
+  slug      String  @db.VarChar(100)
+  content   String?
+}
+
+model post {
+  id          BigInt      @id @default(autoincrement())
+  authorid    BigInt
+  title       String      @db.VarChar(75)
+  metatitle   String?     @db.VarChar(100)
+  slug        String      @unique @db.VarChar(100)
+  summary     String?
+  published   Boolean     @default(false)
+  createdat   DateTime    @default(now()) @db.Timestamp(6)
+  updatedat   DateTime?   @default(now()) @db.Timestamp(6)
+  publishedat DateTime?   @default(now()) @db.Timestamp(6)
+  content     String
+  author      author      @relation(fields: [authorid], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_author")
+  post_meta   post_meta[]
+
+  @@index([slug], map: "idx_slug")
+}
+
+model post_meta {
+  id      BigInt  @id @default(autoincrement())
+  postid  BigInt
+  name    String  @db.VarChar(50)
+  content String?
+  post    post    @relation(fields: [postid], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_meta_post")
+
+  @@index([postid], map: "idx_meta_post")
+}
+
+model author {
+  id        BigInt  @id @default(autoincrement())
+  firstname String  @db.VarChar(50)
+  lastname  String  @db.VarChar(50)
+  mobile    String? @unique @db.VarChar(50)
+  email     String  @unique @db.VarChar(50)
+  intro     String?
+  post      post[]
+
+  @@index([mobile, email], map: "idx_usr")
+}
