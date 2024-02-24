@@ -1,10 +1,8 @@
-import { getAllPost } from "../../../libs/actions";
+import { getAllPost } from "../../actions/db";
 import BlogCard from "./BlogCard";
 
 const Posts = async () => {
   const posts = await getAllPost();
-
-  console.log(posts);
 
   return (
     <>

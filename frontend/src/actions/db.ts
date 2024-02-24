@@ -1,7 +1,7 @@
 "use server"
 
 // grab the prisma client
-import prisma from "./prisma"
+import prisma from "../../utils/prisma/prisma"
 import { post, author } from "@prisma/client";
 
 export async function getAllPost() {
@@ -18,7 +18,7 @@ export async function getPost(slug: string) {
   // slug is indexed in db
   // join on fk authorId
   const result: post[] & author[] = await prisma.$queryRaw`
-  SELECT * FROM post INNER JOIN author ON post.authorId = author.id WHERE slug=${slug}`;
+  SELECT * FROM post INNER JOIN author ON post.email = author.email WHERE slug=${slug}`;
 
   return result[0];
 }
@@ -34,25 +34,25 @@ export async function getAllSlugs() {
 
 export async function createPost(formData: FormData) {
   const rawFormData = {
-    markdown: formData.get('markdown-content'),
-    email: formData.get('email'),
-    title: formData.get('title'),
-    metaTitle: formData.get('metaTitle'),
-    slug: formData.get('slug'),
-    summary: formData.get('summary'),
+    markdown: formData.get('markdown-content') as string,
+    email: formData.get('email') as string,
+    title: formData.get('title') as string,
+    metaTitle: formData.get('metaTitle') as string,
+    slug: formData.get('slug') as string,
+    summary: formData.get('summary') as string,
   }
 
-  // email is indexed, find the author to insert
-  const author: {id: author["id"]}[] = await prisma.$queryRaw`
-  SELECT id FROM author WHERE email=${rawFormData.email}
+  // email is indexed
+  const author: author[] = await prisma.$queryRaw`
+  SELECT * FROM author WHERE email=${rawFormData.email}
   `;
 
 
   // TODO should implement error handling here
   const insertPost = await prisma.$executeRaw`
   INSERT INTO POST 
-  (authorId, title, metaTitle, slug, summary, published, content) VALUES
-  (${author[0].id}::jsonb::text::numeric, ${rawFormData.title},${rawFormData.metaTitle}, ${rawFormData.slug}, ${rawFormData.summary}, true, ${rawFormData.markdown})`;
+  (email, title, metaTitle, slug, summary, published, content) VALUES
+  (${author[0].email}::jsonb::text::numeric, ${rawFormData.title},${rawFormData.metaTitle}, ${rawFormData.slug}, ${rawFormData.summary}, true, ${rawFormData.markdown})`;
 
 }
 

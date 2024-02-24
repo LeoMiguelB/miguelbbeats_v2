@@ -1,28 +1,5 @@
-import { getPost } from "../../../libs/actions";
-import { serialize } from "next-mdx-remote/serialize";
-import { MDXRemoteProps } from "next-mdx-remote";
-import MDXContent from "@/app/components/MDXContent";
-import type { Metadata, ResolvingMetadata } from 'next'
-
-export async function generateMetadata(
-  { params }: { params: { slug: string } },
-  parent: ResolvingMetadata
-): Promise<Metadata> {
-
-  const post = await getPost(params.slug);
-
-  return {
-    title: post.metatitle,
-    description: post.summary
-  }
-}
 
 const Page = async () => {
-
-  const post = await getPost("about-me");
-
-  // front matter is bugged
-  const source = await serialize(post.content);
 
   return (
     <>
@@ -31,19 +8,16 @@ const Page = async () => {
       <div className="flex justify-between px-4 mx-auto max-w-screen-xl">
         {/* using flowbite typography through the format class */}
         <article className="mx-auto w-full max-w-2xl format format-sm sm:format-base lg:format-lg format-blue dark:format-invert">
-          <header className="mb-4 lg:mb-6 not-format">
-            <address className="flex items-center mb-6 not-italic">
-              <div className="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white">
-                <div>
-                  {/* TODO update to route to the about me page */}
-                  <a href="" rel="author" className="text-xl font-bold text-gray-900 dark:text-white">{`${post.firstname} ${post.lastname}`}</a>
-                  <p className="text-base text-gray-500 dark:text-gray-400">{post.publishedat?.toDateString()}</p>
-                </div>
-              </div>
-            </address>
-          </header>
-          {/* wrapper (reference: https://github.com/hashicorp/next-mdx-remote/issues/307#issuecomment-1322246883) */}
-          <MDXContent source={source} />
+          <h1>About Me</h1>
+          <h2>TL;DR</h2>
+          <p>
+            At the time of this writing I am in my second year of studying computer science. I am a believer in life long learning and always looking to expand my skill set. Apart from my studies I dabble with music from time to time experimenting with different sounds. 
+          </p>
+          <h2>Experience</h2>
+          <a href="/RESUME.pdf" target="*">My Resume</a>
+          <p>
+            I worked as a web developer at OneHSN solving different kinds of problems. I mainly focused bugs, database changes, and features within the ASP.NET framework. I also had to the opportunity to learn and build with low code no code platforms such as Power Automate, Power BI, and Power Apps.
+          </p>
         </article>
       </div>
     </main>

@@ -1,4 +1,4 @@
-import { getAllSlugs, getPost } from "../../../../libs/actions";
+import { getAllSlugs, getPost } from "../../../actions/db";
 import { serialize } from "next-mdx-remote/serialize";
 import { MDXRemoteProps } from "next-mdx-remote";
 import MDXContent from "@/app/components/MDXContent";

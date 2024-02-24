@@ -17,7 +17,7 @@ model category {
 
 model post {
   id          BigInt      @id @default(autoincrement())
-  authorid    BigInt
+  email       String      @db.VarChar(50)
   title       String      @db.VarChar(75)
   metatitle   String?     @db.VarChar(100)
   slug        String      @unique @db.VarChar(100)
@@ -27,7 +27,7 @@ model post {
   updatedat   DateTime?   @default(now()) @db.Timestamp(6)
   publishedat DateTime?   @default(now()) @db.Timestamp(6)
   content     String
-  author      author      @relation(fields: [authorid], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_author")
+  author      author      @relation(fields: [email], references: [email], onDelete: NoAction, onUpdate: NoAction, map: "fk_author")
   post_meta   post_meta[]
 
   @@index([slug], map: "idx_slug")

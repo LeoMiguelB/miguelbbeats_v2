@@ -17,7 +17,7 @@ const BlogCard: React.FC<{ p: post }> = ({ p }: { p: post }) => {
           <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 5h12m0 0L9 1m4 4L9 9" />
         </svg>
       </Link>
-      <div className="w-full h-[0.5px] rounded-full mb-3 bg-white"></div>
+      <div className="w-full h-[0.5px] rounded-full mb-3 bg-white opacity-[38%]"></div>
     </div>
   )
 }
